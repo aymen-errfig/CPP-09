@@ -1,5 +1,5 @@
 name = btc
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -std=c++98
 CP = c++
 srcs = src/BitcoinExchange.cpp src/DateTime.cpp src/utils.cpp main.cpp
 heads = include/BitcoinExchange.hpp

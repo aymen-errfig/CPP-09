@@ -11,10 +11,10 @@ DateTime::DateTime(const std::string &date) {
     tmp = split(trim(date), '-');
 
     if (date.size() < 3)
-        return;
-    long year = atol(tmp[0].c_str());
-    long month = atol(tmp[1].c_str());
-    long day = atol(tmp[2].c_str());
+        throw std::runtime_error("invalid date");
+    int year = atoi(tmp[0].c_str());
+    int month = atoi(tmp[1].c_str());
+    int day = atoi(tmp[2].c_str());
 
     time_info.tm_isdst = -1;
     time_info.tm_sec = 0;
@@ -26,6 +26,6 @@ DateTime::DateTime(const std::string &date) {
 
     timestamp = std::mktime(&time_info);
 
-    if (timestamp < 0)
+    if (timestamp < 0 || year != time_info.tm_year + 1900 || month != time_info.tm_mon + 1 || day != time_info.tm_mday)
         throw std::runtime_error("invalid date");
 }
