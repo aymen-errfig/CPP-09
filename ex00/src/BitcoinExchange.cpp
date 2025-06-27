@@ -24,22 +24,30 @@ BitcoinExchange::BitcoinExchange() {
 void BitcoinExchange::MatchClosestExchange(const std::string &date, const std::string &value) const {
 
         // Find the first exchange date > inputDate
-        DateTime inputDate(date);
-        double inputValue = atof(value.c_str());
-        std::map<DateTime, double>::const_iterator ex = exchange_data.upper_bound(inputDate);
+        try {
+            DateTime inputDate(date);
+            double inputValue = atof(value.c_str());
+            if (inputValue < 0 || inputValue > INT_MAX){
+                std::cout << "invalid value for price" << std::endl;
+                return;
+            }
+            std::map<DateTime, double>::const_iterator ex = exchange_data.upper_bound(inputDate);
 
-        if (ex == exchange_data.begin()) {
-            std::cout << "No earlier exchange rate available for: "
-                      << inputDate.date_string << std::endl;
+            if (ex == exchange_data.begin()) {
+                std::cout << "No earlier exchange rate available for: "
+                          << inputDate.date_string << std::endl;
+            }
+
+            --ex; // Step back to get <= inputDate
+
+            double rate = ex->second;
+            double result = inputValue * rate;
+
+            std::cout << inputDate.date_string
+                      << " => " << inputValue << " = " << result << std::endl;
+        } catch (std::exception &e) {
+            std::cout << e.what() << "\n";
         }
-
-        --ex; // Step back to get <= inputDate
-
-        double rate = ex->second;
-        double result = inputValue * rate;
-
-        std::cout << inputDate.date_string
-                  << " => " << inputValue << " = " << result << std::endl;
 }
 
 BitcoinExchange::~BitcoinExchange() {
@@ -50,7 +58,7 @@ void BitcoinExchange::ExchangeRate(const std::string &input_file) const {
     std::string buff;
     std::vector<std::string> tmp;
 
-    std::ifstream inputStream(input_file);
+    std::ifstream inputStream(input_file.c_str());
     if (!inputStream.is_open())
         throw std::runtime_error("Error opening input file");
 
