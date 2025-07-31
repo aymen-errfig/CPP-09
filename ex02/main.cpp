@@ -5,78 +5,40 @@
 
 #include <algorithm>
 #include <iostream>
-#include <list>
 #include <cmath>
 #include <deque>
+#include <climits>
+#include <cerrno>
+#include "PmergeMe.hpp"
 
-typedef std::pair<int, int> Pair;
 typedef std::deque<int>::iterator iterator;
-typedef std::deque<int> list;
+typedef std::deque<int> deq;
 
-int jacobstahlSequence(const int n) {
-    return static_cast<int>((pow(2, n) - pow(-1, n)) / 3);
-}
 
-list jacobstahl(const size_t n) {
-    list order;
-    std::deque<bool> used(n, false);
-
-    for (int i = 0; i < n; ++i) {
-        int jacob_num = jacobstahlSequence(i);
-        if (jacob_num < n && used[jacob_num] == false) {
-            order.push_back(jacob_num);
-            used[jacob_num] = true;
+int main(const int ac, char *av[]) {
+    {
+        const clock_t start = clock();
+        char *end;
+        try {
+            deq numbers;
+            for (int i = 1; i < ac; ++i) {
+                const long num = strtol(av[i], &end, 10);
+                if (num < 0 || num > INT_MAX || av[i] == end || errno == ERANGE)
+                    throw std::runtime_error("invalid number detected");
+                if (std::find(numbers.begin(), numbers.end(), static_cast<int>(num)) != numbers.end())
+                    throw std::runtime_error("duplicated numbers detected");
+                numbers.push_back(static_cast<int>(num));
+            }
+            std::cout << "Before : ";
+            printDeq(numbers);
+            deq result = fordJohnsonDeq(numbers);
+            std::cout << "After : ";
+            printDeq(result);
+            std::cout << "Time to process a range of  : " << numbers.size() << " elements with std::deque " << (static_cast<double>(clock()- start)) / static_cast<double>(CLOCKS_PER_SEC) << " us" << std::endl;
+        } catch (std::exception &e) {
+            std::cout << e.what() << std::endl;
         }
     }
-    for (int i = 0; i < n; ++i) {
-        if (used[i] == false) {
-            order.push_back(i);
-        }
-    }
-    return order;
-}
-
-list fordJohnson(list &input) {
-    list main;
-    list pend;
-
-    if (input.size() == 1) {
-        return input;
-    }
-    for (iterator it = input.begin(); it != input.end(); ++it) {
-        if (std::next(it) == input.end()) {
-            main.push_back(*it);
-            break;
-        }
-        int first = *it;
-        iterator next = std::next(it);
-        int second = *next;
-        ++it;
-        main.push_back(std::max(first, second));
-        pend.push_back(std::min(first, second));
-    }
-
-    const list nums = fordJohnson(main);
-    const list order_list = jacobstahl(pend.size());
-
-
-    list result = nums;
-    for (size_t i = 0; i < pend.size(); ++i) {
-        int current = pend[order_list[i]];
-        iterator pos = std::lower_bound(result.begin(), result.end(), current);
-        result.insert(pos, current);
-    }
-    return result;
-}
-
-int main() {
-    list numbers{0, 2, 1, 3, 5, 4, -1};
-
-    const list g = fordJohnson(numbers);
-    for (const int k : g) {
-        std::cout << k << " ";
-    }
-    std::cout << "\n";
 
     return 0;
 }
