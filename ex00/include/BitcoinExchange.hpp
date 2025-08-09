@@ -11,6 +11,8 @@
 #include <fstream>
 #include <cstdlib>
 
+#define MAX_VAL 1000
+
 class DateTime;
 
 class BitcoinExchange {

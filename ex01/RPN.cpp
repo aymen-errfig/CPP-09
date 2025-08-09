@@ -7,13 +7,14 @@
 RPN::RPN(const std::string &str) {
     std::istringstream iss(str);
     std::string token;
+
     while (iss >> token) {
         if ((token == "+") | (token == "-") | (token == "*") | (token == "/")) {
             if (rnp_stack.size() < 2)
                 throw std::runtime_error("no numbers in stack");
-            int a = rnp_stack.top();
+            const int a = rnp_stack.top();
             rnp_stack.pop();
-            int b = rnp_stack.top();
+            const int b = rnp_stack.top();
             rnp_stack.pop();
             switch (token[0]) {
                 case '+':

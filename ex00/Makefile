@@ -12,7 +12,7 @@ all: $(name)
 	$(CP) $(FLAGS) -c $< -o $@ -g
 
 $(name): $(objs)
-	$(CP) $(FLAGS) $(objs) -o $(name) -fsanitize=address -g
+	$(CP) $(FLAGS) $(objs) -o $(name)
 
 clean:
 	$(RM) $(objs)

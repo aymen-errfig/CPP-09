@@ -7,14 +7,13 @@
 DateTime::DateTime(const std::string &date) {
     date_string = date;
     struct tm time_info;
-    std::vector<std::string> tmp;
-    tmp = split(trim(date), '-');
+    std::map<size_t, std::string> tmp = split(trim(date), '-');
 
     if (date.size() < 3)
         throw std::runtime_error("invalid date");
-    int year = atoi(tmp[0].c_str());
-    int month = atoi(tmp[1].c_str());
-    int day = atoi(tmp[2].c_str());
+    const int year = atoi(tmp[0].c_str());
+    const int month = atoi(tmp[1].c_str());
+    const int day = atoi(tmp[2].c_str());
 
     time_info.tm_isdst = -1;
     time_info.tm_sec = 0;

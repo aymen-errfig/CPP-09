@@ -6,19 +6,20 @@
 #include <stack>
 #include "RPN.hpp"
 
-int main(int ac, char *av[]) {
+int main(const int ac, char *av[]) {
     std::stack<int> stack;
     if (ac == 2) {
         try {
-            RPN rpn(av[1]);
-            std::cout << rpn.getNumbersStack().top() << "\n";
+            const RPN rpn(av[1]);
+            if (rpn.getNumbersStack().size())
+                std::cout << rpn.getNumbersStack().top() << "\n";
         } catch (std::exception &e) {
             std::cerr << e.what() << std::endl;
             return 1;
         }
     }
     else {
-        std::cout << "need 1 argument";
+        std::cout << "need 1 argument\n";
         return 1;
     }
     return 0;

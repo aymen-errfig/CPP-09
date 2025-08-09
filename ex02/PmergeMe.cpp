@@ -1,7 +1,3 @@
-//
-// Created by aerrfig on 31/07/25.
-//
-
 #include "PmergeMe.hpp"
 
 #include <iostream>
@@ -65,6 +61,70 @@ deq jacobstahlSeqDeq(const size_t n) {
 
 void printDeq(deq &d) {
     for (iterator it = d.begin(); it != d.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+}
+
+
+// std::vector logic
+
+vec fordJohnsonVec(vec& input) {
+    vec main;
+    vec pend;
+
+    // Keep behavior consistent but safe for empty input
+    if (input.size() <= 1) {
+        return input;
+    }
+
+    for (viterator it = input.begin(); it != input.end();) {
+        viterator temp = it;
+        ++temp;
+        if (temp == input.end()) {
+            main.push_back(*it);
+            break;
+        }
+        int first = *it;
+        int second = *temp;
+        main.push_back(std::max(first, second));
+        pend.push_back(std::min(first, second));
+        std::advance(it, 2);
+    }
+
+    const vec nums = fordJohnsonVec(main);
+    const std::vector<size_t> order_list = jacobstahlSeqVec(pend.size());
+
+    vec result = nums;
+    for (size_t i = 0; i < pend.size(); ++i) {
+        int current = pend[order_list[i]];
+        viterator pos = std::lower_bound(result.begin(), result.end(), current);
+        result.insert(pos, current);
+    }
+    return result;
+}
+
+std::vector<size_t> jacobstahlSeqVec(const size_t n) {
+    std::vector<size_t> order;
+    std::vector<bool> used(n, false);
+
+    for (size_t i = 0; i < n; ++i) {
+        size_t jacob_num = static_cast<size_t>(jacobstahlSequence(static_cast<int>(i)));
+        if (jacob_num < n && !used[jacob_num]) {
+            order.push_back(jacob_num);
+            used[jacob_num] = true;
+        }
+    }
+    for (size_t i = 0; i < n; ++i) {
+        if (!used[i]) {
+            order.push_back(i);
+        }
+    }
+    return order;
+}
+
+void printVec(vec& v) {
+    for (viterator it = v.begin(); it != v.end(); ++it) {
         std::cout << *it << " ";
     }
     std::cout << std::endl;
