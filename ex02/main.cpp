@@ -25,7 +25,7 @@ int main(const int ac, char *av[]) {
             deq numbers;
             for (int i = 1; i < ac; ++i) {
                 const long num = strtol(av[i], &end, 10);
-                if (num < 0 || num > INT_MAX || av[i] == end || errno == ERANGE)
+                if (num < 0 || num > INT_MAX || av[i] == end)
                     throw std::runtime_error("invalid number detected");
                 if (std::find(numbers.begin(), numbers.end(), static_cast<int>(num)) != numbers.end())
                     throw std::runtime_error("duplicated numbers detected");
@@ -49,7 +49,7 @@ int main(const int ac, char *av[]) {
             vec numbers;
             for (int i = 1; i < ac; ++i) {
                 const long num = strtol(av[i], &end, 10);
-                if (num < 0 || num > INT_MAX || av[i] == end || errno == ERANGE)
+                if (num < 0 || num > INT_MAX || av[i] == end)
                     throw std::runtime_error("invalid number detected");
                 if (std::find(numbers.begin(), numbers.end(), static_cast<int>(num)) != numbers.end())
                     throw std::runtime_error("duplicated numbers detected");
@@ -60,7 +60,7 @@ int main(const int ac, char *av[]) {
             vec result = fordJohnsonVec(numbers);
             std::cout << "After : ";
             printVec(result);
-            std::cout << "Time to process a range of  : " << numbers.size() << " elements with std::deque " << (static_cast<double>(clock()- start)) / static_cast<double>(CLOCKS_PER_SEC) << " us" << std::endl;
+            std::cout << "Time to process a range of  : " << numbers.size() << " elements with std::vector " << (static_cast<double>(clock()- start)) / static_cast<double>(CLOCKS_PER_SEC) << " us" << std::endl;
         } catch (std::exception &e) {
             std::cout << e.what() << std::endl;
         }

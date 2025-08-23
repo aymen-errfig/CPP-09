@@ -5,6 +5,7 @@
 #include "../include/BitcoinExchange.hpp"
 
 #include <algorithm>
+#include <sys/stat.h>
 
 BitcoinExchange::BitcoinExchange() {
     std::string buff;
@@ -55,6 +56,12 @@ BitcoinExchange::~BitcoinExchange() {
 void BitcoinExchange::ExchangeRate(const std::string &input_file) const {
     std::string buff;
 
+    struct stat sb;
+
+    if (stat(input_file.c_str(), &sb) == 0) {
+        if (S_ISDIR(sb.st_mode))
+            throw std::runtime_error("Error this is a directory");
+    }
     std::ifstream inputStream(input_file.c_str());
     if (!inputStream.is_open())
         throw std::runtime_error("Error opening input file");
