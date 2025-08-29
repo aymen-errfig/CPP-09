@@ -27,7 +27,9 @@ RPN::RPN(const std::string &str) {
                     rnp_stack.push(a * b);
                     break;
                 case '/':
-                    rnp_stack.push(a / b);
+                    if (a == 0)
+                        throw std::runtime_error("can't device on zero");
+                    rnp_stack.push(b / a);
                     break;
                 default:
                     throw std::runtime_error("invalid token");
@@ -39,6 +41,8 @@ RPN::RPN(const std::string &str) {
             rnp_stack.push(num);
         }
     }
+    if (rnp_stack.size() > 1)
+        throw std::runtime_error("stack hold 2 numbers, no operation to apply");
 }
 
 RPN::RPN(const RPN &other) {

@@ -35,9 +35,14 @@ void BitcoinExchange::MatchClosestExchange(const std::string &date, const std::s
             if (inputValue > MAX_VAL)
                 throw std::runtime_error("Error: too large a number.");
 
-            const std::map<DateTime, double>::const_iterator it = exchange_data.lower_bound(inputDate);
-
-            if (it == exchange_data.end())
+            std::map<DateTime, double>::const_iterator it = exchange_data.lower_bound(inputDate);
+            while (
+                    it == exchange_data.end() ||
+                    (it != exchange_data.begin() && it->first.timestamp > inputDate.timestamp))
+            {
+                it--;
+            }
+            if (it == exchange_data.begin())
                 throw std::runtime_error("No earlier exchange rate available for: " + inputDate.date_string);
             const double rate = it->second;
             const double result = inputValue * rate;
@@ -67,6 +72,8 @@ void BitcoinExchange::ExchangeRate(const std::string &input_file) const {
         throw std::runtime_error("Error opening input file");
 
     std::getline(inputStream, buff);
+    if (buff != "date | value")
+        throw std::runtime_error("Error: file must start with 'date | value'");
     while (!inputStream.eof()) {
         std::getline(inputStream, buff);
         std::map<size_t, std::string> tmp = split(trim(buff), '|');
