@@ -8,10 +8,10 @@ RM = rm -f
 all: $(name)
 
 %.o: %.cpp PmergeMe.hpp
-	$(CP) $(FLAGS) -c $< -o $@ -g
+	$(CP) $(FLAGS) -c $< -o $@
 
 $(name): $(objs)
-	$(CP) $(FLAGS) $(objs) -o $(name) -fsanitize=address -g
+	$(CP) $(FLAGS) $(objs) -o $(name)
 
 clean:
 	$(RM) $(objs)

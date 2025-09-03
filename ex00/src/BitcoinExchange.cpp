@@ -36,12 +36,8 @@ void BitcoinExchange::MatchClosestExchange(const std::string &date, const std::s
                 throw std::runtime_error("Error: too large a number.");
 
             std::map<DateTime, double>::const_iterator it = exchange_data.lower_bound(inputDate);
-            while (
-                    it == exchange_data.end() ||
-                    (it != exchange_data.begin() && it->first.timestamp > inputDate.timestamp))
-            {
+            if (it->first.date_string != inputDate.date_string)
                 it--;
-            }
             if (it == exchange_data.begin())
                 throw std::runtime_error("No earlier exchange rate available for: " + inputDate.date_string);
             const double rate = it->second;
